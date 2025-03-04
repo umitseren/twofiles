@@ -2,8 +2,77 @@ const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 
 // Set canvas size to a smaller, fixed size
-canvas.width = 600;
-canvas.height = 400;
+canvas.width = 550;
+canvas.height = 300;
+
+// Add blinking functionality for the <blink> tag (classic 2000s feature)
+setInterval(() => {
+    const blinkElements = document.querySelectorAll('blink');
+    blinkElements.forEach(element => {
+        element.style.visibility = element.style.visibility === 'hidden' ? 'visible' : 'hidden';
+    });
+}, 500);
+
+// Add early 2000s cursor trail effect
+const cursorTrail = [];
+const maxTrailLength = 20;
+const trailColor = ['#ff0000', '#ff9900', '#ffff00', '#33cc33', '#3399ff', '#9933ff'];
+
+document.addEventListener('mousemove', (e) => {
+    cursorTrail.push({
+        x: e.clientX,
+        y: e.clientY,
+        color: trailColor[Math.floor(Math.random() * trailColor.length)]
+    });
+    
+    if (cursorTrail.length > maxTrailLength) {
+        cursorTrail.shift();
+    }
+});
+
+// Function to draw the cursor trail
+function drawCursorTrail() {
+    for (let i = 0; i < cursorTrail.length; i++) {
+        const point = cursorTrail[i];
+        const size = (i / cursorTrail.length) * 15;
+        
+        const div = document.createElement('div');
+        div.style.position = 'absolute';
+        div.style.left = `${point.x}px`;
+        div.style.top = `${point.y}px`;
+        div.style.width = `${size}px`;
+        div.style.height = `${size}px`;
+        div.style.borderRadius = '50%';
+        div.style.backgroundColor = point.color;
+        div.style.pointerEvents = 'none';
+        div.style.zIndex = '9999';
+        div.style.opacity = i / cursorTrail.length;
+        div.className = 'cursor-trail';
+        
+        document.body.appendChild(div);
+        
+        setTimeout(() => {
+            div.remove();
+        }, 500);
+    }
+}
+
+// Run cursor trail effect
+setInterval(drawCursorTrail, 50);
+
+// Update button effects
+const buttons = document.querySelectorAll('.button');
+buttons.forEach(button => {
+    button.addEventListener('mouseover', () => {
+        button.style.border = '2px inset #ff9900';
+    });
+    button.addEventListener('mouseout', () => {
+        button.style.border = '2px outset #ff9900';
+    });
+    button.addEventListener('click', () => {
+        alert('This page is still under construction! Check back soon!');
+    });
+});
 
 // Bouncing text class
 class BouncingText {
@@ -17,13 +86,13 @@ class BouncingText {
         this.dx = (Math.random() - 0.5) * 4;
         this.dy = (Math.random() - 0.5) * 4;
         // Calculate width of text
-        ctx.font = `${this.fontSize}px Arial`;
+        ctx.font = `${this.fontSize}px "Comic Sans MS", cursive`;
         this.width = ctx.measureText(this.text).width;
         this.height = this.fontSize;
     }
 
     draw() {
-        ctx.font = `${this.fontSize}px Arial`;
+        ctx.font = `${this.fontSize}px "Comic Sans MS", cursive`;
         ctx.fillStyle = this.color;
         ctx.fillText(this.text, this.x, this.y);
     }
@@ -65,14 +134,26 @@ class BouncingText {
     }
 }
 
-// Create 10 bouncing texts
+// Create bouncing texts with early 2000s messages
 const bouncingTexts = [];
 const colors = ['#FFD700', '#0F0', '#FF00FF', '#00FFFF', '#FF0000', '#FFFFFF', '#FFA500', '#1E90FF', '#32CD32', '#FF69B4'];
+const messages = [
+    "Welcome!",
+    "Early 2000s",
+    "Awesome Site",
+    "Under Construction",
+    "Netscape Now!",
+    "IE 5.0",
+    "Sign Guestbook",
+    "Flash Player",
+    "Java Applet",
+    "Alev, bir alevidir."
+];
 
-for (let i = 0; i < 10; i++) {
+for (let i = 0; i < messages.length; i++) {
     const x = Math.random() * (canvas.width - 200) + 100;
     const y = Math.random() * (canvas.height - 50) + 25;
-    bouncingTexts.push(new BouncingText("Alev, bir alevidir.", x, y, colors[i]));
+    bouncingTexts.push(new BouncingText(messages[i], x, y, colors[i]));
 }
 
 // Animation loop
@@ -90,4 +171,14 @@ function animate() {
 }
 
 // Start animation
-animate(); 
+animate();
+
+// Add visitor counter functionality
+let visitorCount = 1337;
+setInterval(() => {
+    visitorCount++;
+    const counter = document.querySelector('.counter p');
+    if (counter) {
+        counter.textContent = `You are visitor number: ${visitorCount}`;
+    }
+}, 30000); // Increase visitor count every 30 seconds 

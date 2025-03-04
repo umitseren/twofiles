@@ -3,23 +3,113 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bouncing Text Animation</title>
+    <title>Welcome to My Website - Early 2000s Style</title>
     <style>
         body {
             margin: 0;
+            padding: 0;
+            background: #6699cc url('https://www.toptal.com/designers/subtlepatterns/uploads/checkered_pattern.png');
+            font-family: "Comic Sans MS", cursive, sans-serif;
+            color: #000080;
+        }
+        .container {
+            width: 800px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border: 5px solid #000080;
+            box-shadow: 10px 10px 5px #888888;
+        }
+        .header {
+            background: linear-gradient(to bottom, #6699ff 0%, #003366 100%);
+            text-align: center;
+            padding: 15px;
+            border-bottom: 3px solid #ff9900;
+        }
+        .header h1 {
+            color: #ffffff;
+            text-shadow: 2px 2px #000000;
+            margin: 0;
+            font-size: 36px;
+        }
+        .marquee {
+            background-color: #ffff99;
+            padding: 5px;
+            border: 1px solid #ff9900;
+            margin: 10px 0;
+        }
+        .content {
+            padding: 20px;
+            text-align: center;
+        }
+        .animation-container {
             display: flex;
             justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #121212;
+            margin: 20px 0;
         }
         canvas {
-            border: 1px solid #333;
+            border: 3px solid #ff9900;
+            background-color: #121212;
+        }
+        .footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #003366;
+            color: #ffffff;
+            border-top: 2px solid #ff9900;
+            font-size: 12px;
+        }
+        .counter {
+            text-align: center;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .buttons {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+        }
+        .button {
+            background: linear-gradient(to bottom, #ffcc66 0%, #ff9900 100%);
+            border: 2px outset #ff9900;
+            padding: 5px 10px;
+            font-weight: bold;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
-    <canvas id="canvas"></canvas>
+    <div class="container">
+        <div class="header">
+            <h1>Welcome to My Awesome Website!</h1>
+        </div>
+        
+        <marquee class="marquee" scrollamount="5" behavior="alternate">★★★ Welcome to my homepage! Site best viewed in 800x600 resolution! ★★★</marquee>
+        
+        <div class="content">
+            <p><blink>This site is under construction! Please check back often for updates!</blink></p>
+            
+            <div class="animation-container">
+                <canvas id="canvas"></canvas>
+            </div>
+            
+            <div class="buttons">
+                <div class="button">HOME</div>
+                <div class="button">ABOUT</div>
+                <div class="button">LINKS</div>
+                <div class="button">GUESTBOOK</div>
+            </div>
+            
+            <div class="counter">
+                <p>You are visitor number: 1,337</p>
+                <img src="https://tse2.mm.bing.net/th?id=OIP.YQzgU9ZKajk9JxOztFvjTgHaFj&pid=Api&P=0&h=180" width="88" height="31" alt="Geocities">
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>© 2000-2003 My Awesome Website. All Rights Reserved.</p>
+            <p>Best viewed with Netscape Navigator or Internet Explorer 5.0</p>
+        </div>
+    </div>
     <script src="script.js"></script>
 </body>
 </html> 
