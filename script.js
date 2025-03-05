@@ -137,23 +137,14 @@ class BouncingText {
 // Create bouncing texts with early 2000s messages
 const bouncingTexts = [];
 const colors = ['#FFD700', '#0F0', '#FF00FF', '#00FFFF', '#FF0000', '#FFFFFF', '#FFA500', '#1E90FF', '#32CD32', '#FF69B4'];
-const messages = [
-    "Welcome!",
-    "Early 2000s",
-    "Awesome Site",
-    "Under Construction",
-    "Netscape Now!",
-    "IE 5.0",
-    "Sign Guestbook",
-    "Flash Player",
-    "Java Applet",
-    "Alev, bir alevidir."
-];
+// All texts will be "Alev, bir alevidir" as requested
+const message = "Alev, bir alevidir.";
 
-for (let i = 0; i < messages.length; i++) {
+// Create 10 instances of the same message
+for (let i = 0; i < 10; i++) {
     const x = Math.random() * (canvas.width - 200) + 100;
     const y = Math.random() * (canvas.height - 50) + 25;
-    bouncingTexts.push(new BouncingText(messages[i], x, y, colors[i]));
+    bouncingTexts.push(new BouncingText(message, x, y, colors[i]));
 }
 
 // Animation loop
