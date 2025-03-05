@@ -74,7 +74,7 @@ buttons.forEach(button => {
     });
 });
 
-// Bouncing text class
+// Bouncing text class with improved collision physics
 class BouncingText {
     constructor(text, x, y, color) {
         this.text = text;
@@ -89,6 +89,8 @@ class BouncingText {
         ctx.font = `${this.fontSize}px "Comic Sans MS", cursive`;
         this.width = ctx.measureText(this.text).width;
         this.height = this.fontSize;
+        // Add mass property to improve collision physics
+        this.mass = 1;
     }
 
     draw() {
@@ -116,13 +118,54 @@ class BouncingText {
                 this.y - this.height < text.y &&
                 this.y > text.y - text.height) {
                 
-                // Swap velocities for simple collision response
-                const tempDx = this.dx;
-                const tempDy = this.dy;
-                this.dx = text.dx;
-                this.dy = text.dy;
-                text.dx = tempDx;
-                text.dy = tempDy;
+                // Calculate collision response vectors
+                const vCollision = {
+                    x: text.x - this.x,
+                    y: text.y - this.y
+                };
+                
+                // Calculate distance
+                const distance = Math.sqrt(
+                    (text.x - this.x) * (text.x - this.x) +
+                    (text.y - this.y) * (text.y - this.y)
+                );
+                
+                // Normalized collision vector
+                const vCollisionNorm = {
+                    x: vCollision.x / distance,
+                    y: vCollision.y / distance
+                };
+                
+                // Relative velocity
+                const vRelativeVelocity = {
+                    x: this.dx - text.dx,
+                    y: this.dy - text.dy
+                };
+                
+                // Calculate speed after collision
+                const speed = vRelativeVelocity.x * vCollisionNorm.x +
+                            vRelativeVelocity.y * vCollisionNorm.y;
+                
+                // If objects are moving away from each other, skip
+                if (speed < 0) continue;
+                
+                // Calculate impulse scalar
+                const impulse = 2 * speed / (this.mass + text.mass);
+                
+                // Apply impulse
+                this.dx -= impulse * text.mass * vCollisionNorm.x;
+                this.dy -= impulse * text.mass * vCollisionNorm.y;
+                text.dx += impulse * this.mass * vCollisionNorm.x;
+                text.dy += impulse * this.mass * vCollisionNorm.y;
+                
+                // Move objects apart to prevent sticking
+                const overlap = this.width / 2 + text.width / 2 - distance;
+                if (overlap > 0) {
+                    this.x -= overlap * vCollisionNorm.x / 2;
+                    this.y -= overlap * vCollisionNorm.y / 2;
+                    text.x += overlap * vCollisionNorm.x / 2;
+                    text.y += overlap * vCollisionNorm.y / 2;
+                }
             }
         }
 
@@ -134,17 +177,37 @@ class BouncingText {
     }
 }
 
-// Create bouncing texts with early 2000s messages
+// Create bouncing texts with the same message
 const bouncingTexts = [];
-const colors = ['#FFD700', '#0F0', '#FF00FF', '#00FFFF', '#FF0000', '#FFFFFF', '#FFA500', '#1E90FF', '#32CD32', '#FF69B4'];
+const colors = ['#FFD700', '#0F0', '#FF00FF', '#00FFFF', '#FF0000', '#FFFFFF', '#FFA500'];
 // All texts will be "Alev, bir alevidir" as requested
 const message = "Alev, bir alevidir.";
 
-// Create 10 instances of the same message
-for (let i = 0; i < 10; i++) {
-    const x = Math.random() * (canvas.width - 200) + 100;
-    const y = Math.random() * (canvas.height - 50) + 25;
-    bouncingTexts.push(new BouncingText(message, x, y, colors[i]));
+// Create 7 instances of the same message with distinct starting positions
+for (let i = 0; i < 7; i++) {
+    // Use a more distributed approach for initial positions
+    const sectionWidth = canvas.width / 3;
+    const sectionHeight = canvas.height / 3;
+    
+    // Calculate position based on section grid to ensure better distribution
+    const gridX = i % 3;
+    const gridY = Math.floor(i / 3);
+    
+    const x = (gridX * sectionWidth) + (Math.random() * (sectionWidth - 100));
+    const y = (gridY * sectionHeight) + (Math.random() * (sectionHeight - 30)) + 30;
+    
+    // Create more varied velocities
+    const dx = (Math.random() > 0.5 ? 1 : -1) * (Math.random() * 3 + 1);
+    const dy = (Math.random() > 0.5 ? 1 : -1) * (Math.random() * 3 + 1);
+    
+    // Create bouncing text with custom velocity
+    const text = new BouncingText(message, x, y, colors[i]);
+    
+    // Override the default velocities
+    text.dx = dx;
+    text.dy = dy;
+    
+    bouncingTexts.push(text);
 }
 
 // Animation loop
